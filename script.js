@@ -72,6 +72,7 @@ let groups = [];
 let openSkipGap = 1 / 16;
 let maxNotes = 2;
 let frets = 5;
+let maxFrets = 8;
 let maxBPS = 30;
 let ignoreGap = 1;
 let noteTolerance = 20;
@@ -159,7 +160,7 @@ function loadSettings() {
   if(maxBPS <= 0) {
     maxBPS = Infinity;
   }
-  document.getElementById("frets").value = Math.max(0, Math.min(5, document.getElementById("frets").value));
+  document.getElementById("frets").value = Math.max(0, Math.min(maxFrets, document.getElementById("frets").value));
   frets = document.getElementById("frets").value * 1;
   stripSustain = document.getElementById("stripSustain").value * 1;
   if(stripSustain < 0) {
@@ -785,7 +786,7 @@ function loadHTMLcontent() {
       <label class="custom-control-label" for="extendedSustains"><span data-toggle="tooltip" title="When enabled, allows extended sustains">Extended Sustains</span></label>
     </div>
     <div class="custom-control">
-      <input type="number" id="frets" value=5 min="1" step="1">
+      <input type="number" id="frets" value=` + maxFrets + ` min="1" step="1">
       <label for="frets"><span data-toggle="tooltip" title="5 for Hard/Expert, 4 for Medium, 3 for Easy">Frets</span></label>
     </div>
     <div class="custom-control">
@@ -869,6 +870,13 @@ function setup() {
   createCanvas(windowWidth / 4, windowHeight);
   colors = [color(0, 200, 0), color(255, 0, 0), color(255, 255, 0), color(0, 50, 200), color(255, 128, 0)];
 
+  let shade = 64;
+  let shadeStep = (256 - 64) / (maxFrets - colors.length)
+  while (colors.length < maxFrets) {
+    colors.push(color(shade, shade, shade))
+    shade += shadeStep;
+  }
+
   window.requestAnimationFrame(myDraw);
 }
 
@@ -885,34 +893,34 @@ function drawNote(note, y, type, duration) {
   colors[note].setAlpha(150);
   fill(colors[note]);
   if(duration > 0) {
-    rect(note * width / 6 + width / 6 - width / 40, y - duration, width / 20, duration, width / 40);
+    rect(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)) - width / 40, y - duration, width / 20, duration, width / 40);
   }
   colors[note].setAlpha(255);
   fill(colors[note]);
   switch (type) {
     case ('hopo'):
       strokeWeight(width / 32);
-      ellipse(note * width / 6 + width / 6, y, width / 8, width / 8);
+      ellipse(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 8, width / 8);
       stroke(255, 150);
       fill(255);
-      ellipse(note * width / 6 + width / 6, y, width / 16, width / 16);
+      ellipse(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 16, width / 16);
       break;
     case ('tap'):
       strokeWeight(width / 32);
-      ellipse(note * width / 6 + width / 6, y, width / 8, width / 8);
+      ellipse(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 8, width / 8);
       fill(0, 150);
       noStroke();
-      arc(note * width / 6 + width / 6, y, width / 8, width / 8, Math.PI / 6, Math.PI * 5 / 6);
-      arc(note * width / 6 + width / 6, y, width / 8, width / 8, Math.PI * 7 / 6, Math.PI * 11 / 6);
+      arc(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 8, width / 8, Math.PI / 6, Math.PI * 5 / 6);
+      arc(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 8, width / 8, Math.PI * 7 / 6, Math.PI * 11 / 6);
       fill(0, 200);
-      ellipse(note * width / 6 + width / 6, y, width / 12, width / 12);
+      ellipse(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 12, width / 12);
       break;
     default:
-      ellipse(note * width / 6 + width / 6, y, width / 8, width / 8);
+      ellipse(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 8, width / 8);
       strokeWeight(width / 128);
       stroke(0);
       fill(255, 150);
-      ellipse(note * width / 6 + width / 6, y, width / 14, width / 14);
+      ellipse(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), y, width / 14, width / 14);
   }
 }
 
@@ -929,7 +937,7 @@ function drawSustain(note, y, type, duration) {
   colors[note].setAlpha(150);
   fill(colors[note]);
   if(duration > 0) {
-    rect(note * width / 6 + width / 6 - width / 40, y - duration, width / 20, height * 0.9 - (y - duration - 4), width / 40);
+    rect(note * (width / (maxFrets + 1)) + (width / (maxFrets + 1)) - width / 40, y - duration, width / 20, height * 0.9 - (y - duration - 4), width / 40);
   }
 }
 
@@ -1284,8 +1292,8 @@ function myDraw() {
   background(0);
   stroke(150);
   strokeWeight(2);
-  for(let i = 0; i < 5; i++) {
-    line(i * width / 6 + width / 6, 0, i * width / 6 + width / 6, height);
+  for(let i = 0; i < maxFrets; i++) {
+    line(i * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), 0, i * (width / (maxFrets + 1)) + (width / (maxFrets + 1)), height);
   }
   stroke(50, 150, 250);
   line(0, height * 0.9, width, height * 0.9);
@@ -1375,7 +1383,7 @@ function myDraw() {
     if(Y > 0 && Y < 0.9 * height) {
       fill(255);
       noStroke();
-      ellipse(unChartedNotes[note][8] / 88 * width, Y, width / 88, width / 6);
+      ellipse(unChartedNotes[note][8] / 88 * width, Y, width / 88, (width / (maxFrets + 1)));
       drawNote(chartedNotes[note] - openNotes, Y, '', (sus) / preview.scale * height);
       noStroke();
       //test
@@ -1387,10 +1395,10 @@ function myDraw() {
       while(myLastNote > 0 && unChartedNotes[myLastNote][0] == lastT) {
         if(note > 0 && unChartedNotes[myLastNote][1] == currentNote[1] && chartedNotes[note] != chartedNotes[myLastNote]) {
           fill(255, 0, 0, 150);
-          rect(chartedNotes[note] * width / 6 + width / 6 - 10, Y, 20, (currentNote[3] - preview.time) / preview.scale * height - (unChartedNotes[myLastNote][3] - preview.time) / preview.scale * height);
+          rect(chartedNotes[note] * (width / (maxFrets + 1)) + (width / (maxFrets + 1)) - 10, Y, 20, (currentNote[3] - preview.time) / preview.scale * height - (unChartedNotes[myLastNote][3] - preview.time) / preview.scale * height);
         } else if(note > 0 && unChartedNotes[myLastNote][1] != currentNote[1] && chartedNotes[note] == chartedNotes[myLastNote]) {
           fill(255, 0, 0, 150);
-          rect(chartedNotes[note] * width / 6 + width / 6 - 10, Y, 20, (currentNote[3] - preview.time) / preview.scale * height - (unChartedNotes[myLastNote][3] - preview.time) / preview.scale * height);
+          rect(chartedNotes[note] * (width / (maxFrets + 1)) + (width / (maxFrets + 1)) - 10, Y, 20, (currentNote[3] - preview.time) / preview.scale * height - (unChartedNotes[myLastNote][3] - preview.time) / preview.scale * height);
         }
         myLastNote--;
       }
