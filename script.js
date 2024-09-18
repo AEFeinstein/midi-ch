@@ -24,6 +24,7 @@ if(!(window.File && window.FileReader && window.FileList && window.Blob)) {
   })
 }
 let currentMidi = null;
+let currentDifficulty = "";
 let settings;
 
 let synths = [];
@@ -54,6 +55,7 @@ function parseFile(file) {
       currentMidi.tracks[track].instrument.percussion = midi.tracks[track].instrument.percussion;
     }
     loadHTMLcontent();
+    setHardParams()
   }
   reader.readAsArrayBuffer(file)
 }
@@ -150,6 +152,48 @@ function getTempo(t) {
     }
   }
   return temp;
+}
+
+function setEasyParams() {
+  currentDifficulty = "Easy";
+  document.getElementById("frets").value = 3;
+  document.getElementById("maxBPS").value = 5;
+  document.getElementById("maxNotes").value = 2;
+  document.getElementById("openSkipGap").value = 16;
+  document.getElementById("stripSustain").value = 1;
+  document.getElementById("minimumSustain").value = 1;
+  document.getElementById("ignoreGap").value = 1;
+  document.getElementById("noteTolerance").value = 0.15;
+  document.getElementById("leadingSeconds").value = 2;
+  document.getElementById("previewScale").value = 2;
+}
+
+function setMediumParams() {
+  currentDifficulty = "Medium";
+  document.getElementById("frets").value = 5;
+  document.getElementById("maxBPS").value = 18;
+  document.getElementById("maxNotes").value = 2;
+  document.getElementById("openSkipGap").value = 16;
+  document.getElementById("stripSustain").value = 1;
+  document.getElementById("minimumSustain").value = 1;
+  document.getElementById("ignoreGap").value = 1;
+  document.getElementById("noteTolerance").value = 0.15;
+  document.getElementById("leadingSeconds").value = 2;
+  document.getElementById("previewScale").value = 2;
+}
+
+function setHardParams() {
+  currentDifficulty = "Hard";
+  document.getElementById("frets").value = 7;
+  document.getElementById("maxBPS").value = 30;
+  document.getElementById("maxNotes").value = 2;
+  document.getElementById("openSkipGap").value = 16;
+  document.getElementById("stripSustain").value = 1;
+  document.getElementById("minimumSustain").value = 1;
+  document.getElementById("ignoreGap").value = 1;
+  document.getElementById("noteTolerance").value = 0.15;
+  document.getElementById("leadingSeconds").value = 2;
+  document.getElementById("previewScale").value = 2;
 }
 
 function loadSettings() {
@@ -758,7 +802,7 @@ loading_phrase = Generated With Edward's midi-CH auto charter: https://efhiii.gi
     zip.generateAsync({
       type: "blob"
     }).then(function(blob) { // 1) generate the zip file
-      saveAs(blob, currentMidi.name + ".zip"); // 2) trigger the download
+      saveAs(blob, currentMidi.name + "_" + currentDifficulty + ".zip"); // 2) trigger the download
     }, function(err) {
       jQuery("#blob").text(err);
     });
@@ -775,9 +819,12 @@ function loadHTMLcontent() {
   measureShift = true;
   stripSustain = 0;
   htmlContent.innerHTML =
-    `<button id="blob" class="btn btn-primary" style="width:100%">click to download</button><br>
-  <button class="btn btn-primary" style="width:100%" onclick="loadSettings()"><span data-toggle="tooltip" title="Re-charts the song based on the new settings and any recently deleted notes">Load New Settings</button><br>
-    <div class="custom-control custom-checkbox">
+ `<button class="btn btn-primary" style="width:33%" onclick="setEasyParams()"><span data-toggle="tooltip" title="Set defaults to Easy">Set Easy Defaults</button>
+  <button class="btn btn-primary" style="width:33%" onclick="setMediumParams()"><span data-toggle="tooltip" title="Set defaults to Medium">Set Medium Defaults</button>
+  <button class="btn btn-primary" style="width:33%" onclick="setHardParams()"><span data-toggle="tooltip" title="Set defaults to Hard">Set Hard Defaults</button>
+  <button class="btn btn-primary" style="width:100%" onclick="loadSettings()"><span data-toggle="tooltip" title="Re-charts the song based on the new settings and any recently deleted notes">Re-Chart Song</button><br>
+  <button id="blob" class="btn btn-primary" style="width:100%">Download Chart</button><br>
+      <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input" id="openNotes">
       <label class="custom-control-label" for="openNotes"><span data-toggle="tooltip" title="When enabled, include open notes">Open notes</span></label>
     </div>
