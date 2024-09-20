@@ -164,7 +164,7 @@ function setEasyParams() {
   document.getElementById("minimumSustain").value = 1;
   document.getElementById("ignoreGap").value = 1;
   document.getElementById("noteTolerance").value = 0.15;
-  document.getElementById("leadingSeconds").value = 2;
+  document.getElementById("leadingSeconds").value = 0;
   document.getElementById("previewScale").value = 2;
 }
 
@@ -178,7 +178,7 @@ function setMediumParams() {
   document.getElementById("minimumSustain").value = 1;
   document.getElementById("ignoreGap").value = 1;
   document.getElementById("noteTolerance").value = 0.15;
-  document.getElementById("leadingSeconds").value = 2;
+  document.getElementById("leadingSeconds").value = 0;
   document.getElementById("previewScale").value = 2;
 }
 
@@ -192,7 +192,7 @@ function setHardParams() {
   document.getElementById("minimumSustain").value = 1;
   document.getElementById("ignoreGap").value = 1;
   document.getElementById("noteTolerance").value = 0.15;
-  document.getElementById("leadingSeconds").value = 2;
+  document.getElementById("leadingSeconds").value = 0;
   document.getElementById("previewScale").value = 2;
 }
 
