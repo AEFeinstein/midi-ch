@@ -156,9 +156,9 @@ function getTempo(t) {
 
 function setEasyParams() {
   currentDifficulty = "Easy";
-  document.getElementById("frets").value = 3;
-  document.getElementById("maxBPS").value = 5;
-  document.getElementById("maxNotes").value = 2;
+  document.getElementById("frets").value = 4;
+  document.getElementById("maxBPS").value = 2;
+  document.getElementById("maxNotes").value = 1;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;
   document.getElementById("minimumSustain").value = 1;
@@ -171,7 +171,7 @@ function setEasyParams() {
 function setMediumParams() {
   currentDifficulty = "Medium";
   document.getElementById("frets").value = 5;
-  document.getElementById("maxBPS").value = 18;
+  document.getElementById("maxBPS").value = 7;
   document.getElementById("maxNotes").value = 2;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;
@@ -184,8 +184,8 @@ function setMediumParams() {
 
 function setHardParams() {
   currentDifficulty = "Hard";
-  document.getElementById("frets").value = 7;
-  document.getElementById("maxBPS").value = 30;
+  document.getElementById("frets").value = 6;
+  document.getElementById("maxBPS").value = 14;
   document.getElementById("maxNotes").value = 2;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;
