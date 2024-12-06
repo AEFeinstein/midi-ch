@@ -57,6 +57,32 @@ for(let i = 0; i < 10; i++) {
 //   console.log('Difficulty: ' + argDifficulty);
 // }
 
+// This function automatically charts all hosted songs
+// Make sure to run "corsServer.py 6969" in the midis folder before launching this page!
+const allMidis = ["sh_bleed.mid", "sh_cgrove.mid", "sh_crace.mid", "sh_credits.mid", "sh_cremulons.mid", "sh_devils.mid", "sh_ocean.mid", "sh_pango.mid", "sh_revenge.mid", "sh_wakeman.mid"];
+let autoChartIdx = 0;
+function autoChartAll()
+{
+  console.log("Charting " + allMidis[autoChartIdx])
+  url = "http://localhost:6969/" + allMidis[autoChartIdx]
+
+  fetch(url)
+  .then(res => res.blob()) // Gets the response and returns it as a blob
+  .then(blob => {
+    // currentFilename = "test.mid"
+    parseFile(blob);
+    chartAll();
+    // Delay charting the next song until this one is finished (1s per difficulty)
+    setTimeout(() => {
+      autoChartIdx = autoChartIdx + 1;
+      if(autoChartIdx < allMidis.length)
+      {
+        autoChartAll();
+      }  
+    }, 4000);
+});
+}
+
 function parseFile(file) {
   //read the file
   const reader = new FileReader()
@@ -66,6 +92,7 @@ function parseFile(file) {
     currentMidi.duration = midi.duration;
     currentMidi.durationTicks = midi.durationTicks;
     currentMidi.name = midi.name;
+    console.log("PARSED " + currentMidi.name) // TODO figure out filenames
     for(let temp in currentMidi.header.tempos) {
       currentMidi.header.tempos[temp].time = midi.header.tempos[temp].time;
     }
@@ -794,7 +821,8 @@ loading_phrase = Generated With Edward's midi-CH auto charter: https://efhiii.gi
 
 `);
 
-  let chartName = currentFilename.split('.').slice(0, -1).join('.') + "_" + currentDifficulty.toLowerCase().charAt(0) + ".chart";
+console.log("SAVING " + currentMidi.name + " / " + currentFilename) // TODO figure out filenames
+let chartName = currentFilename.split('.').slice(0, -1).join('.') + "_" + currentDifficulty.toLowerCase().charAt(0) + ".chart";
 
   zip.file(chartName, `[Song]
 {
@@ -905,7 +933,9 @@ function loadHTMLcontent() {
   }
 
   for(let i = 0; i < currentMidi.tracks.length; i++) {
-    if(i == 0) {
+    // Automatically select tracks on channel 15
+    if(15 == currentMidi.tracks[i].channel) {
+      console.log("Selecting track");
       settings.tracks[i] = true;
     } else {
       settings.tracks[i] = false;
@@ -1679,3 +1709,6 @@ function chartAll()
     }, i * 1000);
   }
 }
+
+// Chart everything!
+autoChartAll();
