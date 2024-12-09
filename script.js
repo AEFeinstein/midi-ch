@@ -57,31 +57,59 @@ for(let i = 0; i < 10; i++) {
 //   console.log('Difficulty: ' + argDifficulty);
 // }
 
-// This function automatically charts all hosted songs
-// Make sure to run "corsServer.py 6969" in the midis folder before launching this page!
-const allMidis = ["sh_bleed.mid", "sh_cgrove.mid", "sh_crace.mid", "sh_credits.mid", "sh_cremulons.mid", "sh_devils.mid", "sh_ocean.mid", "sh_pango.mid", "sh_revenge.mid", "sh_wakeman.mid"];
-let autoChartIdx = 0;
-function autoChartAll()
-{
-  console.log("Charting " + allMidis[autoChartIdx])
-  url = "http://localhost:6969/" + allMidis[autoChartIdx]
+// // This function automatically charts all hosted songs
+// // Make sure to run "corsServer.py 6969" in the midis folder before launching this page!
+// const allMidis = ["sh_bleed.mid", "sh_cgrove.mid", "sh_crace.mid", "sh_credits.mid", "sh_cremulons.mid", "sh_devils.mid", "sh_ocean.mid", "sh_pango.mid", "sh_revenge.mid", "sh_wakeman.mid"];
+// const suffixes = ['e', 'm', 'h'];
+// const steps = ["load", "save"]
 
-  fetch(url)
-  .then(res => res.blob()) // Gets the response and returns it as a blob
-  .then(blob => {
-    // currentFilename = "test.mid"
-    parseFile(blob);
-    chartAll();
-    // Delay charting the next song until this one is finished (1s per difficulty)
-    setTimeout(() => {
-      autoChartIdx = autoChartIdx + 1;
-      if(autoChartIdx < allMidis.length)
-      {
-        autoChartAll();
-      }  
-    }, 4000);
-});
-}
+// let autoChartIdx = 0;
+// function autoChartAll()
+// {
+//   let startTime = Date.now();
+//   timeout = 1000;
+//   allMidis.forEach((midi) => {
+//     suffixes.forEach((dif) => {
+//       steps.forEach((step) => {
+//         setTimeout(() => {
+ 
+//           if("load" == step)
+//           {
+//             // console.log(midi + "_" + dif + " (" + (Date.now() - startTime) + ")")
+//             url = "http://localhost:6969/" + midi
+    
+//             fetch(url)
+//               .then(res => res.blob()) // Gets the response and returns it as a blob
+//               .then(blob => {
+//                   currentFilename = midi;
+//                   parseFile(blob);
+//                 });
+//           }
+//           else if ("save" == step)
+//           {
+//             if ("e" == dif)
+//             {
+//               setEasyParams();
+//             }
+//             else if ("m" == dif)
+//             {
+//               setMediumParams();                
+//             }
+//             else if ("h" == dif)
+//             {
+//               setHardParams();
+//             }
+//             console.log(currentFilename + "_" + currentDifficulty);
+//             loadSettings();
+//             document.getElementById('blob').click();  
+//           }
+//         }, timeout);
+//         timeout += 1000;
+//       })
+//     });
+//   });
+//   return;
+// }
 
 function parseFile(file) {
   //read the file
@@ -92,7 +120,6 @@ function parseFile(file) {
     currentMidi.duration = midi.duration;
     currentMidi.durationTicks = midi.durationTicks;
     currentMidi.name = midi.name;
-    console.log("PARSED " + currentMidi.name) // TODO figure out filenames
     for(let temp in currentMidi.header.tempos) {
       currentMidi.header.tempos[temp].time = midi.header.tempos[temp].time;
     }
@@ -821,8 +848,8 @@ loading_phrase = Generated With Edward's midi-CH auto charter: https://efhiii.gi
 
 `);
 
-console.log("SAVING " + currentMidi.name + " / " + currentFilename) // TODO figure out filenames
-let chartName = currentFilename.split('.').slice(0, -1).join('.') + "_" + currentDifficulty.toLowerCase().charAt(0) + ".chart";
+let heroName = currentFilename.split('.').slice(0, -1);
+let chartName = heroName + "_" + currentDifficulty.toLowerCase().charAt(0) + ".chart";
 
   zip.file(chartName, `[Song]
 {
@@ -851,7 +878,7 @@ let chartName = currentFilename.split('.').slice(0, -1).join('.') + "_" + curren
     zip.generateAsync({
       type: "blob"
     }).then(function(blob) { // 1) generate the zip file
-      saveAs(blob, currentMidi.name + "_" + currentDifficulty + ".zip"); // 2) trigger the download
+      saveAs(blob, heroName + "_" + currentDifficulty + ".zip"); // 2) trigger the download
     }, function(err) {
       jQuery("#blob").text(err);
     });
@@ -868,12 +895,12 @@ function loadHTMLcontent() {
   measureShift = true;
   stripSustain = 0;
   htmlContent.innerHTML =
- `<button class="btn btn-primary" style="width:33%" onclick="setEasyParams()"><span data-toggle="tooltip" title="Set defaults to Easy">Set Easy Defaults</button>
-  <button class="btn btn-primary" style="width:33%" onclick="setMediumParams()"><span data-toggle="tooltip" title="Set defaults to Medium">Set Medium Defaults</button>
-  <button class="btn btn-primary" style="width:33%" onclick="setHardParams()"><span data-toggle="tooltip" title="Set defaults to Hard">Set Hard Defaults</button>
-  <button class="btn btn-primary" style="width:100%;background-color:#f44336"" onclick="chartAll()"><span data-toggle="tooltip" title="Chart and download all difficulties">Chart All Difficulties</button>
-  <button class="btn btn-primary" style="width:100%" onclick="loadSettings()"><span data-toggle="tooltip" title="Re-charts the song based on the new settings and any recently deleted notes">Re-Chart Song</button><br>
-  <button id="blob" class="btn btn-primary" style="width:100%">Download Chart</button><br>
+ `<button class="btn btn-primary" style="width:33%" id="easyBtn" onclick="setEasyParams()"><span data-toggle="tooltip" title="Set defaults to Easy">Set Easy Defaults</button>
+  <button class="btn btn-primary" style="width:33%" id="mediBtn" onclick="setMediumParams()"><span data-toggle="tooltip" title="Set defaults to Medium">Set Medium Defaults</button>
+  <button class="btn btn-primary" style="width:33%" id="hardBtn" onclick="setHardParams()"><span data-toggle="tooltip" title="Set defaults to Hard">Set Hard Defaults</button>
+  <button class="btn btn-primary" style="width:100%;background-color:#f44336" id="allBtn" onclick="chartAll()"><span data-toggle="tooltip" title="Chart and download all difficulties">Chart All Difficulties</button>
+  <button class="btn btn-primary" style="width:100%" id="rechartBtn" onclick="loadSettings()"><span data-toggle="tooltip" title="Re-charts the song based on the new settings and any recently deleted notes">Re-Chart Song</button><br>
+  <button id="blob" class="btn btn-primary" id="downloadBtn" style="width:100%">Download Chart</button><br>
       <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input" id="openNotes">
       <label class="custom-control-label" for="openNotes"><span data-toggle="tooltip" title="When enabled, include open notes">Open notes</span></label>
@@ -932,11 +959,12 @@ function loadHTMLcontent() {
     }
   }
 
+  let trackFound = false;
   for(let i = 0; i < currentMidi.tracks.length; i++) {
     // Automatically select tracks on channel 15
     if(15 == currentMidi.tracks[i].channel) {
-      console.log("Selecting track");
       settings.tracks[i] = true;
+      trackFound = true;
     } else {
       settings.tracks[i] = false;
     }
@@ -946,6 +974,10 @@ function loadHTMLcontent() {
       <canvas class="notesPreview" id="canvasNumber` + i + `"></canvas>
     </div>`;
     //htmlContent.innerHTML+='<input type="checkbox" checked="true" onClick="toggleTrack('+i+')"><label>track '+currentMidi.tracks[i].name+'<br>'+currentMidi.tracks[i].instrument.family+': '+currentMidi.tracks[i].instrument.name+'</label><br>';
+  }
+  if(!trackFound) {
+    console.log("Track 16 not found for " + currentFilename);
+    settings.tracks[0] = true;
   }
   for(let i = 0; i < currentMidi.tracks.length; i++) {
     previews.push(new drawNotesPreview("canvasNumber" + i, currentMidi.tracks[i]));
@@ -1696,19 +1728,5 @@ drawNotesPreview.prototype.draw = function() {
   this.lastTime = myTime;
 }
 
-function chartAll()
-{
-  let suffixes = ['e', 'm', 'h'];
-  let dFuncs = [setEasyParams, setMediumParams, setHardParams];
-  for (let i = 0; i < suffixes.length; i++) {
-    // Chart the song
-    setTimeout(() => {
-      dFuncs[i]();
-      loadSettings();
-      document.getElementById('blob').click();  
-    }, i * 1000);
-  }
-}
-
 // Chart everything!
-autoChartAll();
+// autoChartAll();
