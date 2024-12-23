@@ -2,9 +2,17 @@ import os
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import selenium.webdriver
+import selenium.webdriver.firefox.service
 
-driver = webdriver.Firefox()
-driver.get("file:///home/adam/git/midi-ch-aef/index.html")
+firefox_bin = "/snap/firefox/current/usr/lib/firefox/firefox"
+firefoxdriver_bin = "/snap/firefox/current/usr/lib/firefox/geckodriver"
+options = selenium.webdriver.firefox.options.Options()
+options.binary_location = firefox_bin
+
+driver = webdriver.Firefox(options=options)
+
+driver.get("file:///home/adam/midi-ch/index.html")
 
 dBtnIds = ['easyBtn', 'mediBtn', 'hardBtn']
 
