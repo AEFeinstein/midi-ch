@@ -12,7 +12,7 @@ options.binary_location = firefox_bin
 
 driver = webdriver.Firefox(options=options)
 
-driver.get("file:///home/adam/midi-ch/index.html")
+driver.get("file:///home/adam/git/midi-ch-aef/index.html")
 
 dBtnIds = ['easyBtn', 'mediBtn', 'hardBtn']
 

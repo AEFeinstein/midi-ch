@@ -257,7 +257,7 @@ function setMediumParams() {
 function setHardParams() {
   currentDifficulty = "Hard";
   document.getElementById("frets").value = 6;
-  document.getElementById("maxBPS").value = 300; //getTempo(10000) / 15 + 0.1;
+  document.getElementById("maxBPS").value = getTempo(10000) / 15 + 0.1;
   document.getElementById("maxNotes").value = 1;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;
