@@ -127,7 +127,9 @@ function parseFile(file) {
       currentMidi.tracks[track].instrument.percussion = midi.tracks[track].instrument.percussion;
     }
     loadHTMLcontent();
-    setHardParams()
+    setHardParams();
+
+    console.log("Tempo for " + currentFilename + " is " + getTempo(10000));
   }
   reader.readAsArrayBuffer(file)
 }
@@ -228,8 +230,12 @@ function getTempo(t) {
 
 function setEasyParams() {
   currentDifficulty = "Easy";
+  let tempo = getTempo(10000);
+  // if (tempo < 100) {
+  //   tempo *= 2;
+  // }
   document.getElementById("frets").value = 4;
-  document.getElementById("maxBPS").value = getTempo(10000) / 60 + 0.1;
+  document.getElementById("maxBPS").value = tempo / 120 + 0.1;
   document.getElementById("maxNotes").value = 1;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;
@@ -242,8 +248,12 @@ function setEasyParams() {
 
 function setMediumParams() {
   currentDifficulty = "Medium";
+  let tempo = getTempo(10000);
+  // if (tempo < 100) {
+  //   tempo *= 2;
+  // }
   document.getElementById("frets").value = 5;
-  document.getElementById("maxBPS").value = getTempo(10000) / 30 + 0.1;
+  document.getElementById("maxBPS").value = tempo / 60 + 0.1;
   document.getElementById("maxNotes").value = 1;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;
@@ -256,8 +266,12 @@ function setMediumParams() {
 
 function setHardParams() {
   currentDifficulty = "Hard";
+  let tempo = getTempo(10000);
+  // if (tempo < 100) {
+  //   tempo *= 2;
+  // }
   document.getElementById("frets").value = 6;
-  document.getElementById("maxBPS").value = getTempo(10000) / 15 + 0.1;
+  document.getElementById("maxBPS").value = tempo / 30 + 0.1;
   document.getElementById("maxNotes").value = 1;
   document.getElementById("openSkipGap").value = 16;
   document.getElementById("stripSustain").value = 1;

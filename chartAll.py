@@ -30,10 +30,11 @@ for midiFile in os.listdir(midiFolder):
         # Click some buttons
         for bId in dBtnIds:
             driver.find_element(By.ID, bId).click()
+            time.sleep(1)
             driver.find_element(By.ID, 'rechartBtn').click()
             time.sleep(1)
             driver.find_element(By.ID, 'blob').click()
-            time.sleep(1)
+            time.sleep(2)
 
 input("Press Enter to continue...")
 
