@@ -20,6 +20,10 @@ dBtnIds = ['easyBtn', 'mediBtn', 'hardBtn']
 midiFolder = 'midis'
 for midiFile in os.listdir(midiFolder):
 
+    # Uncomment to only chart gunship credits
+    # if 'gs' not in midiFile:
+    #     continue
+
     aPath = os.path.abspath(os.sep.join([midiFolder, midiFile]))
     if(os.path.isfile(aPath)):
 

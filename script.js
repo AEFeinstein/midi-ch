@@ -267,9 +267,10 @@ function setMediumParams() {
 function setHardParams() {
   currentDifficulty = "Hard";
   let tempo = getTempo(10000);
-  // if (tempo < 100) {
-  //   tempo *= 2;
-  // }
+  // Double the max tempo for hard gunship credits
+  if ("sh_gs_credits.mid" == currentFilename) {
+    tempo *= 2;
+  }
   document.getElementById("frets").value = 6;
   document.getElementById("maxBPS").value = tempo / 30 + 0.1;
   document.getElementById("maxNotes").value = 1;
